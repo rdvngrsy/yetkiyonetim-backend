@@ -1,6 +1,7 @@
 package com.yetkiyonetim.yetkiyonetim.services.abstracts;
 
 import com.yetkiyonetim.yetkiyonetim.entities.compositeKey.RolePermissionId;
+import com.yetkiyonetim.yetkiyonetim.entities.concretes.RolePermission;
 import com.yetkiyonetim.yetkiyonetim.services.dtos.requests.rolePermission.CreateRolePermissionRequest;
 import com.yetkiyonetim.yetkiyonetim.services.dtos.requests.rolePermission.DeleteRolePermissionRequest;
 import com.yetkiyonetim.yetkiyonetim.services.dtos.requests.rolePermission.UpdateRolePermissionRequest;
@@ -16,4 +17,5 @@ public interface RolePermissionService {
     void createRolePermission(CreateRolePermissionRequest createRolePermissionRequest);
 //    void updateRolePermission(UpdateRolePermissionRequest updateRolePermissionRequest);
     void deleteRolePermission(DeleteRolePermissionRequest deleteRolePermissionRequest);
+    List<RolePermission> findByRoleId(Long roleId);
 }

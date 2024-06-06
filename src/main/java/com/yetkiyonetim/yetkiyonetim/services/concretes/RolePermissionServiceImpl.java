@@ -69,5 +69,10 @@ public class RolePermissionServiceImpl implements RolePermissionService {
                 .orElseThrow(() -> new RuntimeException("RolePermission not found"));
         rolePermissionRepository.delete(rolePermission);
     }
+
+    @Override
+    public List<RolePermission> findByRoleId(Long roleId) {
+        return rolePermissionRepository.findByRoleId(roleId);
+    }
 }
 
