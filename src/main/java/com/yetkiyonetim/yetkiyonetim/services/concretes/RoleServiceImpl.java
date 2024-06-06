@@ -1,9 +1,7 @@
 package com.yetkiyonetim.yetkiyonetim.services.concretes;
 
 import com.yetkiyonetim.yetkiyonetim.core.utilities.mappers.ModelMapperService;
-import com.yetkiyonetim.yetkiyonetim.entities.concretes.Permission;
 import com.yetkiyonetim.yetkiyonetim.entities.concretes.Role;
-import com.yetkiyonetim.yetkiyonetim.repositories.PermissionRepository;
 import com.yetkiyonetim.yetkiyonetim.repositories.RoleRepository;
 import com.yetkiyonetim.yetkiyonetim.services.abstracts.RoleService;
 import com.yetkiyonetim.yetkiyonetim.services.dtos.requests.role.CreateRoleRequest;
@@ -14,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -51,7 +48,7 @@ public class RoleServiceImpl implements RoleService {
     public void updateRole(UpdateRoleRequest updateRoleRequest) {
         Role role = roleRepository.findById(updateRoleRequest.getId())
                 .orElseThrow(() -> new RuntimeException("Role not found with id: " + updateRoleRequest.getId()));
-        role.setRoleName(updateRoleRequest.getRoleName());
+        role.setName(updateRoleRequest.getRoleName());
         role.setDescription(updateRoleRequest.getDescription());
         roleRepository.save(role);
     }

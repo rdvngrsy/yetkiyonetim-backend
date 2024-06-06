@@ -5,10 +5,7 @@ import com.yetkiyonetim.yetkiyonetim.entities.abstracts.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
 
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -18,7 +15,7 @@ import java.util.Set;
 public class Role extends BaseEntity  {
 
     @Column(unique = true, nullable = false)
-    private String roleName;
+    private String name;
 
     @Column
     private String description;

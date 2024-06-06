@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class GetPermissionListResponse {
     private Long id;
-    private String permissionName;
+    private String name;
     private String description;
 }

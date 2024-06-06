@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -17,7 +16,7 @@ import java.util.Set;
 public class Permission extends BaseEntity {
 
     @Column(unique = true, nullable = false)
-    private String permissionName;
+    private String name;
 
     @Column
     private String description;

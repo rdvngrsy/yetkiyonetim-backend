@@ -7,5 +7,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class GetUserRoleListResponse {
     private String userUsername;
-    private String roleRoleName;
+    private String roleName;
 }

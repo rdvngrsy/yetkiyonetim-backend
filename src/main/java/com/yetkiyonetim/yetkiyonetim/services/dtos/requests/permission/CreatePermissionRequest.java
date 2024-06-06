@@ -6,6 +6,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class CreatePermissionRequest {
-    private String permissionName;
+    private String name;
     private String description;
 }

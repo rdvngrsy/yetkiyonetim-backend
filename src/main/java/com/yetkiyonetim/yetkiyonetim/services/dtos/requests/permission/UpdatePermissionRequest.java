@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UpdatePermissionRequest {
     private Long id;
-    private String permissionName;
+    private String name;
     private String description;
 }
