@@ -5,6 +5,7 @@ import com.yetkiyonetim.yetkiyonetim.entities.concretes.UserRole;
 import com.yetkiyonetim.yetkiyonetim.repositories.UserRoleRepository;
 import com.yetkiyonetim.yetkiyonetim.services.abstracts.UserRoleService;
 import com.yetkiyonetim.yetkiyonetim.services.dtos.requests.userRole.CreateUserRoleRequest;
+import com.yetkiyonetim.yetkiyonetim.services.dtos.requests.userRole.DeleteUserRoleRequest;
 import com.yetkiyonetim.yetkiyonetim.services.dtos.requests.userRole.UpdateUserRoleRequest;
 import com.yetkiyonetim.yetkiyonetim.services.dtos.responses.userRole.GetUserRoleListResponse;
 import com.yetkiyonetim.yetkiyonetim.services.dtos.responses.userRole.GetUserRoleResponse;
@@ -31,10 +32,19 @@ public class UserRoleServiceImpl implements UserRoleService {
     }
 
     @Override
-    public GetUserRoleResponse getUserRoleById(UserRoleId id) {
-        UserRole userRole = userRoleRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("UserRole not found with id: " + id));
-        return modelMapperService.forResponse().map(userRole, GetUserRoleResponse.class);
+    public List<GetUserRoleResponse> getRolesByUserId(Long userId) {
+        List<UserRole> userRoles = userRoleRepository.findByUserId(userId);
+        return userRoles.stream()
+                .map(userRole -> modelMapperService.forResponse().map(userRole, GetUserRoleResponse.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<GetUserRoleResponse> getUsersByRoleId(Long roleId) {
+        List<UserRole> userRoles = userRoleRepository.findByRoleId(roleId);
+        return userRoles.stream()
+                .map(userRole -> modelMapperService.forResponse().map(userRole, GetUserRoleResponse.class))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -43,20 +53,21 @@ public class UserRoleServiceImpl implements UserRoleService {
         userRoleRepository.save(userRole);
     }
 
-    @Override
-    public void updateUserRole(UpdateUserRoleRequest updateUserRoleRequest) {
-        UserRoleId id = new UserRoleId(updateUserRoleRequest.getUserId(), updateUserRoleRequest.getRoleId());
-        UserRole userRole = userRoleRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("UserRole not found with id: " + id));
-        // Update fields as necessary
-        userRoleRepository.save(userRole);
-    }
+//    @Override
+//    public void updateUserRole(UpdateUserRoleRequest updateUserRoleRequest) {
+//        UserRoleId id = new UserRoleId(updateUserRoleRequest.getUserId(), updateUserRoleRequest.getRoleId());
+//        UserRole userRole = userRoleRepository.findById(id)
+//                .orElseThrow(() -> new RuntimeException("UserRole not found with id: " + id));
+//        // Update fields as necessary
+//        userRoleRepository.save(userRole);
+//    }
 
     @Override
-    public void deleteUserRole(UserRoleId id) {
-        UserRole userRole = userRoleRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("UserRole not found with id: " + id));
+    public void deleteUserRole(DeleteUserRoleRequest deleteUserRoleRequest) {
+        UserRole userRole = userRoleRepository.findById(new UserRoleId(deleteUserRoleRequest.getUserId(), deleteUserRoleRequest.getRoleId()))
+                .orElseThrow(() -> new RuntimeException("UserRole not found"));
         userRoleRepository.delete(userRole);
     }
+
 }
 

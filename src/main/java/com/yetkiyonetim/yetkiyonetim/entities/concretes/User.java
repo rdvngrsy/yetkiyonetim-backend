@@ -29,7 +29,7 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "password",nullable = false)
     private String password;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<UserRole> userRoles;
 
 
