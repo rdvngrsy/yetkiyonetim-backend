@@ -1,5 +1,6 @@
 package com.yetkiyonetim.yetkiyonetim.services.concretes;
 
+import com.yetkiyonetim.yetkiyonetim.businessRules.RolePermissionBusinessRules;
 import com.yetkiyonetim.yetkiyonetim.core.utilities.mappers.ModelMapperService;
 import com.yetkiyonetim.yetkiyonetim.entities.compositeKey.RolePermissionId;
 import com.yetkiyonetim.yetkiyonetim.entities.concretes.RolePermission;
@@ -7,22 +8,22 @@ import com.yetkiyonetim.yetkiyonetim.repositories.RolePermissionRepository;
 import com.yetkiyonetim.yetkiyonetim.services.abstracts.RolePermissionService;
 import com.yetkiyonetim.yetkiyonetim.services.dtos.requests.rolePermission.CreateRolePermissionRequest;
 import com.yetkiyonetim.yetkiyonetim.services.dtos.requests.rolePermission.DeleteRolePermissionRequest;
-import com.yetkiyonetim.yetkiyonetim.services.dtos.requests.rolePermission.UpdateRolePermissionRequest;
 import com.yetkiyonetim.yetkiyonetim.services.dtos.responses.rolePermission.GetRolePermissionListResponse;
 import com.yetkiyonetim.yetkiyonetim.services.dtos.responses.rolePermission.GetRolePermissionResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class RolePermissionServiceImpl implements RolePermissionService {
+    private final RolePermissionBusinessRules rolePermissionBusinessRules;
 
-    @Autowired
-    private RolePermissionRepository rolePermissionRepository;
+    private final RolePermissionRepository rolePermissionRepository;
 
-    @Autowired
-    private ModelMapperService modelMapperService;
+    private final ModelMapperService modelMapperService;
 
     @Override
     public List<GetRolePermissionListResponse> getAllRolePermissions() {
@@ -34,6 +35,8 @@ public class RolePermissionServiceImpl implements RolePermissionService {
 
     @Override
     public List<GetRolePermissionResponse> getPermissionsByRoleId(Long roleId) {
+        rolePermissionBusinessRules.checkIfRolePermissionExistsByRoleId(roleId);
+
         List<RolePermission> rolePermissions = rolePermissionRepository.findByRoleId(roleId);
         return rolePermissions.stream()
                 .map(rolePermission -> modelMapperService.forResponse().map(rolePermission, GetRolePermissionResponse.class))
@@ -42,6 +45,8 @@ public class RolePermissionServiceImpl implements RolePermissionService {
 
     @Override
     public List<GetRolePermissionResponse> getRolesByPermissionId(Long permissionId) {
+        rolePermissionBusinessRules.checkIfRolePermissionExistsByPermissionId(permissionId);
+
         List<RolePermission> rolePermissions = rolePermissionRepository.findByPermissionId(permissionId);
         return rolePermissions.stream()
                 .map(rolePermission -> modelMapperService.forResponse().map(rolePermission, GetRolePermissionResponse.class))
@@ -50,6 +55,7 @@ public class RolePermissionServiceImpl implements RolePermissionService {
 
     @Override
     public void createRolePermission(CreateRolePermissionRequest createRolePermissionRequest) {
+        rolePermissionBusinessRules.checkIfRolePermissionExists(createRolePermissionRequest.getRoleId(), createRolePermissionRequest.getPermissionId());
         RolePermission rolePermission = modelMapperService.forRequest().map(createRolePermissionRequest, RolePermission.class);
         rolePermissionRepository.save(rolePermission);
     }
@@ -65,6 +71,8 @@ public class RolePermissionServiceImpl implements RolePermissionService {
 
     @Override
     public void deleteRolePermission(DeleteRolePermissionRequest deleteRolePermissionRequest) {
+        rolePermissionBusinessRules.checkForDeleteIfRolePermissionExists(deleteRolePermissionRequest.getRoleId(), deleteRolePermissionRequest.getPermissionId());
+
         RolePermission rolePermission = rolePermissionRepository.findById(new RolePermissionId(deleteRolePermissionRequest.getRoleId(), deleteRolePermissionRequest.getPermissionId()))
                 .orElseThrow(() -> new RuntimeException("RolePermission not found"));
         rolePermissionRepository.delete(rolePermission);

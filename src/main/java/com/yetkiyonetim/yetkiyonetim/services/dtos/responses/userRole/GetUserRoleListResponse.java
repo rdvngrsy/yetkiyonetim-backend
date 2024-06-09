@@ -8,4 +8,6 @@ import lombok.NoArgsConstructor;
 public class GetUserRoleListResponse {
     private String userUsername;
     private String roleName;
+    private Long userId;
+    private Long roleId;
 }

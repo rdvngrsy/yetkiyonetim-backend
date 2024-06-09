@@ -31,6 +31,12 @@ public class GlobalExceptionHandler {
         return exception.getMessage();
     }
 
+    @ExceptionHandler({BusinessException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleBusinessException(BusinessException exception) {
+        return exception.getMessage();
+    }
+
     @ExceptionHandler({Exception.class})
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public String handleError(Exception exception)

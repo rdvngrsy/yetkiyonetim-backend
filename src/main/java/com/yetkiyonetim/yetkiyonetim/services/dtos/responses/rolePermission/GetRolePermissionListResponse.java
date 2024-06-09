@@ -6,7 +6,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class GetRolePermissionListResponse {
-    private String roleRoleName;
-    private String permissionPermissionName;
+    private String roleName;
+    private String permissionName;
     private String permissionDescription;
+    private Long roleId;
+    private Long permissionId;
 }

@@ -29,11 +29,12 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
+        /*http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/auth/**",
-                                "/api/auth/register",
+                                "/api/role-permissions/**",
+                                "/api/user-roles/**",
                                 "/api/users/**",
                                 "/api/permissions/**",
                                 "/api/roles/**",
@@ -43,6 +44,27 @@ public class SecurityConfiguration {
                                 "/v3/api-docs/**"
                         )
                         .permitAll()
+                        .anyRequest().authenticated())
+                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authenticationProvider(authenticationProvider)
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+        return http.build();*/
+
+        http
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/api/auth/**",
+                                "/api/user-roles/user/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui",
+                                "/swagger-resources/**",
+                                "/v3/api-docs/**"
+                        )
+                        .permitAll()
+                        .requestMatchers("/api/role-permissions/**", "/api/permissions/**", "/api/roles/**")
+                        .hasAnyRole("ADMIN", "USER_MANAGER")
+                        .requestMatchers("/api/user-roles/**", "/api/users/**")
+                        .hasAnyRole("ADMIN", "USER_MANAGER", "USER")
                         .anyRequest().authenticated())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)

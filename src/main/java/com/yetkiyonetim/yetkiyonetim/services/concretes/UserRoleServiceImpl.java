@@ -1,10 +1,10 @@
 package com.yetkiyonetim.yetkiyonetim.services.concretes;
+
+import com.yetkiyonetim.yetkiyonetim.businessRules.UserRoleBusinessRules;
 import com.yetkiyonetim.yetkiyonetim.core.utilities.mappers.ModelMapperService;
 import com.yetkiyonetim.yetkiyonetim.entities.compositeKey.UserRoleId;
 import com.yetkiyonetim.yetkiyonetim.entities.concretes.RolePermission;
-import com.yetkiyonetim.yetkiyonetim.entities.concretes.UserPermission;
 import com.yetkiyonetim.yetkiyonetim.entities.concretes.UserRole;
-import com.yetkiyonetim.yetkiyonetim.repositories.RolePermissionRepository;
 import com.yetkiyonetim.yetkiyonetim.repositories.UserRoleRepository;
 import com.yetkiyonetim.yetkiyonetim.services.abstracts.RolePermissionService;
 import com.yetkiyonetim.yetkiyonetim.services.abstracts.UserPermissionService;
@@ -12,32 +12,27 @@ import com.yetkiyonetim.yetkiyonetim.services.abstracts.UserRoleService;
 import com.yetkiyonetim.yetkiyonetim.services.dtos.requests.userPermission.CreateUserPermissionRequest;
 import com.yetkiyonetim.yetkiyonetim.services.dtos.requests.userRole.CreateUserRoleRequest;
 import com.yetkiyonetim.yetkiyonetim.services.dtos.requests.userRole.DeleteUserRoleRequest;
-import com.yetkiyonetim.yetkiyonetim.services.dtos.requests.userRole.UpdateUserRoleRequest;
 import com.yetkiyonetim.yetkiyonetim.services.dtos.responses.userRole.GetUserRoleListResponse;
 import com.yetkiyonetim.yetkiyonetim.services.dtos.responses.userRole.GetUserRoleResponse;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class UserRoleServiceImpl implements UserRoleService {
+    private final UserRoleBusinessRules userRoleBusinessRules;
 
-    @Autowired
-    private UserRoleRepository userRoleRepository;
+    private final UserRoleRepository userRoleRepository;
 
-    @Autowired
-    private RolePermissionService rolePermissionService;
+    private final RolePermissionService rolePermissionService;
 
-    @Autowired
-    private UserPermissionService userPermissionService;
+    private final UserPermissionService userPermissionService;
 
-//    @Autowired
-//    private UserPermissionRepository userPermissionRepository;
-
-    @Autowired
-    private ModelMapperService modelMapperService;
+    private final ModelMapperService modelMapperService;
 
     @Override
     public List<GetUserRoleListResponse> getAllUserRoles() {
@@ -49,6 +44,7 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     @Override
     public List<GetUserRoleResponse> getRolesByUserId(Long userId) {
+        userRoleBusinessRules.checkIfUserRoleExistsByUserId(userId);
         List<UserRole> userRoles = userRoleRepository.findByUserId(userId);
         return userRoles.stream()
                 .map(userRole -> modelMapperService.forResponse().map(userRole, GetUserRoleResponse.class))
@@ -57,27 +53,29 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     @Override
     public List<GetUserRoleResponse> getUsersByRoleId(Long roleId) {
+        userRoleBusinessRules.checkIfUserRoleExistsByRoleId(roleId);
         List<UserRole> userRoles = userRoleRepository.findByRoleId(roleId);
         return userRoles.stream()
                 .map(userRole -> modelMapperService.forResponse().map(userRole, GetUserRoleResponse.class))
                 .collect(Collectors.toList());
     }
 
-  @Override
-@Transactional
-public void createUserRole(CreateUserRoleRequest createUserRoleRequest) {
-      UserRole userRole = modelMapperService.forRequest().map(createUserRoleRequest, UserRole.class);
-      userRoleRepository.save(userRole);
+    @Override
+    @Transactional
+    public void createUserRole(CreateUserRoleRequest createUserRoleRequest) {
+        userRoleBusinessRules.checkIfUserRoleExists(createUserRoleRequest.getUserId(), createUserRoleRequest.getRoleId());
+        UserRole userRole = modelMapperService.forRequest().map(createUserRoleRequest, UserRole.class);
+        userRoleRepository.save(userRole);
 
-      // User'a Role atandığında, otomatik olarak UserPermission ekleyin
-      List<RolePermission> rolePermissions = rolePermissionService.findByRoleId(createUserRoleRequest.getRoleId());
-      for (RolePermission rolePermission : rolePermissions) {
-          CreateUserPermissionRequest userPermissionRequest = new CreateUserPermissionRequest();
-          userPermissionRequest.setUser(userRole.getUser());
-          userPermissionRequest.setPermission(rolePermission.getPermission());
-          userPermissionService.save(userPermissionRequest);
-      }
-}
+        // User'a Role atandığında, otomatik olarak UserPermission ekleyin
+        List<RolePermission> rolePermissions = rolePermissionService.findByRoleId(createUserRoleRequest.getRoleId());
+        for (RolePermission rolePermission : rolePermissions) {
+            CreateUserPermissionRequest userPermissionRequest = new CreateUserPermissionRequest();
+            userPermissionRequest.setUser(userRole.getUser());
+            userPermissionRequest.setPermission(rolePermission.getPermission());
+            userPermissionService.save(userPermissionRequest);
+        }
+    }
 
 //    @Override
 //    @Transactional
@@ -109,6 +107,8 @@ public void createUserRole(CreateUserRoleRequest createUserRoleRequest) {
     @Override
     @Transactional
     public void deleteUserRole(DeleteUserRoleRequest deleteUserRoleRequest) {
+        userRoleBusinessRules.checkForDeleteIfUserRoleExists(deleteUserRoleRequest.getUserId(), deleteUserRoleRequest.getRoleId());
+
         UserRole userRole = userRoleRepository.findById(new UserRoleId(deleteUserRoleRequest.getUserId(), deleteUserRoleRequest.getRoleId()))
                 .orElseThrow(() -> new RuntimeException("UserRole not found"));
 

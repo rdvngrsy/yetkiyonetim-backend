@@ -40,7 +40,7 @@ public class PermissionController {
         permissionService.createPermission(createPermissionRequest);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping
     public void updatePermission(@RequestBody @Valid UpdatePermissionRequest updatePermissionRequest) {
         permissionService.updatePermission(updatePermissionRequest);
     }

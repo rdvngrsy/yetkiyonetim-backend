@@ -8,4 +8,5 @@ import lombok.NoArgsConstructor;
 public class GetUserRoleResponse {
     private Long userId;
     private Long roleId;
+    private String roleName;
 }

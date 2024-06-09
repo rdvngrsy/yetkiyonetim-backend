@@ -1,5 +1,6 @@
 package com.yetkiyonetim.yetkiyonetim.services.concretes;
 
+import com.yetkiyonetim.yetkiyonetim.businessRules.PermissionBusinessRules;
 import com.yetkiyonetim.yetkiyonetim.core.utilities.mappers.ModelMapperService;
 import com.yetkiyonetim.yetkiyonetim.entities.concretes.Permission;
 import com.yetkiyonetim.yetkiyonetim.repositories.PermissionRepository;
@@ -8,21 +9,21 @@ import com.yetkiyonetim.yetkiyonetim.services.dtos.requests.permission.CreatePer
 import com.yetkiyonetim.yetkiyonetim.services.dtos.requests.permission.UpdatePermissionRequest;
 import com.yetkiyonetim.yetkiyonetim.services.dtos.responses.permission.GetPermissionListResponse;
 import com.yetkiyonetim.yetkiyonetim.services.dtos.responses.permission.GetPermissionResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Service
 public class PermissionServiceImpl implements PermissionService {
+    private final PermissionRepository permissionRepository;
 
+    private final PermissionBusinessRules permissionBusinessRules;
 
-    @Autowired
-    private PermissionRepository permissionRepository;
-
-    @Autowired
-    private ModelMapperService modelMapperService;
+    private final ModelMapperService modelMapperService;
 
     @Override
     public List<GetPermissionListResponse> getAllPermissions() {
@@ -34,6 +35,8 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Override
     public GetPermissionResponse getPermissionById(Long id) {
+        permissionBusinessRules.checkIfPermissionExists(id);
+
         Permission permission = permissionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Permission not found with id: " + id));
         return modelMapperService.forResponse().map(permission, GetPermissionResponse.class);
@@ -41,12 +44,16 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Override
     public void createPermission(CreatePermissionRequest createPermissionRequest) {
+        permissionBusinessRules.checkIfPermissionNameExists(createPermissionRequest.getName());
+
         Permission permission = modelMapperService.forRequest().map(createPermissionRequest, Permission.class);
         permissionRepository.save(permission);
     }
 
     @Override
     public void updatePermission(UpdatePermissionRequest updatePermissionRequest) {
+        permissionBusinessRules.checkIfPermissionExists(updatePermissionRequest.getId());
+
         Permission permission = permissionRepository.findById(updatePermissionRequest.getId())
                 .orElseThrow(() -> new RuntimeException("Permission not found with id: " + updatePermissionRequest.getId()));
         permission.setName(updatePermissionRequest.getName());
@@ -56,6 +63,8 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Override
     public void deletePermission(Long id) {
+        permissionBusinessRules.checkIfPermissionExists(id);
+
         Permission permission = permissionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Permission not found with id: " + id));
         permissionRepository.delete(permission);

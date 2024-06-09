@@ -11,6 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/user-roles")
+@CrossOrigin
 public class UserRoleController {
 
     @Autowired
@@ -22,7 +23,7 @@ public class UserRoleController {
     }
 
     @GetMapping("/user/{userId}")
-    public List<GetUserRoleResponse> getRolesByUserId(@PathVariable Long userId) {
+    public List<GetUserRoleResponse> getRolesByUserId(@RequestParam Long userId) {
         return userRoleService.getRolesByUserId(userId);
     }
 

@@ -19,6 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/roles")
+@CrossOrigin
 public class RoleController {
 
     @Autowired
@@ -40,7 +41,7 @@ public class RoleController {
         roleService.createRole(createRoleRequest);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping
     public void updateRole(@RequestBody @Valid UpdateRoleRequest updateRoleRequest) {
         roleService.updateRole(updateRoleRequest);
     }

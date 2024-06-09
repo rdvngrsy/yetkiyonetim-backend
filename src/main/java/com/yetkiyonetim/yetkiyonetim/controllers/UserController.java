@@ -14,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
+@CrossOrigin
 public class UserController {
 
     @Autowired
@@ -29,7 +30,7 @@ public class UserController {
         return permissionService.getUserById(id);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping
     public void updateUser(@RequestBody @Valid UpdateUserRequest updateUserRequest) {
         permissionService.updateUser(updateUserRequest);
     }
