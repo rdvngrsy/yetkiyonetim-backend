@@ -29,7 +29,7 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        /*http
+        http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/auth/**",
@@ -48,28 +48,38 @@ public class SecurityConfiguration {
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-        return http.build();*/
+        return http.build();
 
-        http
+       /* http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/auth/**",
-                                "/api/user-roles/user/**",
+                        // Herkese açık endpointler
+                        .requestMatchers(
+                                "/api/auth/**",
+                                "/api/user-roles/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui",
                                 "/swagger-resources/**",
                                 "/v3/api-docs/**"
-                        )
-                        .permitAll()
-                        .requestMatchers("/api/role-permissions/**", "/api/permissions/**", "/api/roles/**")
-                        .hasAnyRole("ADMIN", "USER_MANAGER")
-                        .requestMatchers("/api/user-roles/**", "/api/users/**")
-                        .hasAnyRole("ADMIN", "USER_MANAGER", "USER")
-                        .anyRequest().authenticated())
+                        ).permitAll()
+                        // ADMIN ve USER_MANAGER rollerine açık endpointler
+                        .requestMatchers(
+                                "/api/role-permissions/**",
+                                "/api/permissions/**",
+                                "/api/roles/**"
+                        ).hasAnyRole("ADMIN", "USER_MANAGER")
+                        // ADMIN, USER_MANAGER ve USER rollerine açık endpointler
+                        .requestMatchers(
+                                "/api/user-roles/**",
+                                "/api/users/**"
+                        ).hasAnyRole("ADMIN", "USER_MANAGER", "USER")
+                        // Diğer tüm istekler kimlik doğrulaması gerektirir
+                        .anyRequest().authenticated()
+                )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-        return http.build();
+        return http.build() */
     }
 
     //Swagger-ui Bearer Authentication Configuration

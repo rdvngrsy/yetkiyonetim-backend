@@ -22,7 +22,7 @@ public class UserRoleController {
         return userRoleService.getAllUserRoles();
     }
 
-    @GetMapping("/user/{userId}")
+    @GetMapping("/user")
     public List<GetUserRoleResponse> getRolesByUserId(@RequestParam Long userId) {
         return userRoleService.getRolesByUserId(userId);
     }
