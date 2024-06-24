@@ -5,12 +5,14 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Entity
 @Table(name = "user_roles")
 @Data
 @NoArgsConstructor
 @IdClass(UserRoleId.class)
-public class UserRole {
+public class UserRole implements Serializable {
     @Id
     @ManyToOne
     @JoinColumn(name = "user_id")

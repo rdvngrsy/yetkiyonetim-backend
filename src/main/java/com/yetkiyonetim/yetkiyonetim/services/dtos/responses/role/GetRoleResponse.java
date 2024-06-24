@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class GetRoleResponse {
     private Long id;
-    private String roleName;
+    private String name;
     private String description;
 }

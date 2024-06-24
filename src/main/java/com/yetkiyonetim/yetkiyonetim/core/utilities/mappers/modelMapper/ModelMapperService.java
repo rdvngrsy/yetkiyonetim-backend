@@ -1,4 +1,4 @@
-package com.yetkiyonetim.yetkiyonetim.core.utilities.mappers;
+package com.yetkiyonetim.yetkiyonetim.core.utilities.mappers.modelMapper;
 
 import org.modelmapper.ModelMapper;
 

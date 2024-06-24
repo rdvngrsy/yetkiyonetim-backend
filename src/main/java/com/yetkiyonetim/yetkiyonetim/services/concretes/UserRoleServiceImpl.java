@@ -1,7 +1,7 @@
 package com.yetkiyonetim.yetkiyonetim.services.concretes;
 
 import com.yetkiyonetim.yetkiyonetim.businessRules.UserRoleBusinessRules;
-import com.yetkiyonetim.yetkiyonetim.core.utilities.mappers.ModelMapperService;
+import com.yetkiyonetim.yetkiyonetim.core.utilities.mappers.modelMapper.ModelMapperService;
 import com.yetkiyonetim.yetkiyonetim.entities.compositeKey.UserRoleId;
 import com.yetkiyonetim.yetkiyonetim.entities.concretes.RolePermission;
 import com.yetkiyonetim.yetkiyonetim.entities.concretes.UserRole;

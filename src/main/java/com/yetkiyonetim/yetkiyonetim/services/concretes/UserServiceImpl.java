@@ -2,7 +2,8 @@ package com.yetkiyonetim.yetkiyonetim.services.concretes;
 
 
 import com.yetkiyonetim.yetkiyonetim.businessRules.UserBusinessRules;
-import com.yetkiyonetim.yetkiyonetim.core.utilities.mappers.ModelMapperService;
+import com.yetkiyonetim.yetkiyonetim.core.utilities.mappers.mapStructMapper.UserMapper;
+import com.yetkiyonetim.yetkiyonetim.core.utilities.mappers.modelMapper.ModelMapperService;
 import com.yetkiyonetim.yetkiyonetim.entities.concretes.User;
 import com.yetkiyonetim.yetkiyonetim.repositories.UserRepository;
 import com.yetkiyonetim.yetkiyonetim.services.abstracts.UserService;
@@ -11,6 +12,7 @@ import com.yetkiyonetim.yetkiyonetim.services.dtos.responses.user.GetUserListRes
 import com.yetkiyonetim.yetkiyonetim.services.dtos.responses.user.GetUserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,16 +22,15 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
     private final UserBusinessRules userBusinessRules;
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
     private final ModelMapperService modelMapperService;
+
 
     @Override
     public List<GetUserListResponse> getAllUsers() {
-        List<User> userList = userRepository.findAll();
-
-        List<GetUserListResponse> userResponse = userList.stream()
-                .map(color ->this.modelMapperService.forResponse()
-                        .map(color, GetUserListResponse.class)).collect(Collectors.toList());
-        return userResponse;
+        return userRepository.findAll().stream()
+                .map(user -> userMapper.userToGetUserListResponse(user))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -38,14 +39,15 @@ public class UserServiceImpl implements UserService {
 
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
-        return this.modelMapperService.forResponse().map(user, GetUserResponse.class);
+        return userMapper.userToGetUserResponse(user);
     }
+
 
     @Override
     public void createUser(User createUserRequest) {
         userBusinessRules.checkIfUsernameExists(createUserRequest.getUsername());
-        User user = this.modelMapperService.forRequest().map(createUserRequest, User.class);
-        userRepository.save(user);
+//        User user = userMapper.createUserRequestToUser(createUserRequest);
+        userRepository.save(createUserRequest);
     }
 
     @Override
@@ -67,9 +69,13 @@ public class UserServiceImpl implements UserService {
         userRepository.delete(user);
     }
 
-    @Override
-    public User getByUsername(String username) {
-        return userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found" + username));
-    }
 
+    @Override
+    public GetUserResponse getByUsername(String username) {
+        userBusinessRules.checkIfUsernameExists(username);
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found with username: " + username));
+        return userMapper.userToGetUserResponse(user);
+    }
 }

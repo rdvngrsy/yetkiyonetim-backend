@@ -4,16 +4,19 @@ import com.yetkiyonetim.yetkiyonetim.services.dtos.requests.rolePermission.Creat
 import com.yetkiyonetim.yetkiyonetim.services.dtos.requests.rolePermission.DeleteRolePermissionRequest;
 import com.yetkiyonetim.yetkiyonetim.services.dtos.responses.rolePermission.GetRolePermissionListResponse;
 import com.yetkiyonetim.yetkiyonetim.services.dtos.responses.rolePermission.GetRolePermissionResponse;
+
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@AllArgsConstructor
 @RequestMapping("/api/role-permissions")
 @CrossOrigin
 public class RolePermissionController {
 
-    @Autowired
+
     private RolePermissionService rolePermissionService;
 
     @GetMapping

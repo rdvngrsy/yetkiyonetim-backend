@@ -44,7 +44,9 @@ public class JwtService {
         Map<String, Object> customClaims = new HashMap<>(Map.of(
                 "id", user.getId(),
                 "username", user.getUsername(),
-                "roles", user.getAuthorities()
+                "roles", user.getAuthorities().stream()
+                        .map(GrantedAuthority::getAuthority)
+                        .collect(Collectors.toList())
         ));
         return generateToken(customClaims, user);
     }

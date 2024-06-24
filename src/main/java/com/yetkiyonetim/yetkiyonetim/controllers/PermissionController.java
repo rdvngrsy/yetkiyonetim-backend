@@ -9,6 +9,7 @@ import com.yetkiyonetim.yetkiyonetim.services.dtos.responses.permission.GetPermi
 import com.yetkiyonetim.yetkiyonetim.services.dtos.responses.permission.GetPermissionResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,6 @@ import java.util.List;
 @RequestMapping("/api/permissions")
 public class PermissionController {
 
-    @Autowired
     private PermissionService permissionService;
 
     @GetMapping

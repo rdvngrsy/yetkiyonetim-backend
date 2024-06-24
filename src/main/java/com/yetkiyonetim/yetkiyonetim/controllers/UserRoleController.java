@@ -5,16 +5,18 @@ import com.yetkiyonetim.yetkiyonetim.services.dtos.requests.userRole.CreateUserR
 import com.yetkiyonetim.yetkiyonetim.services.dtos.requests.userRole.DeleteUserRoleRequest;
 import com.yetkiyonetim.yetkiyonetim.services.dtos.responses.userRole.GetUserRoleListResponse;
 import com.yetkiyonetim.yetkiyonetim.services.dtos.responses.userRole.GetUserRoleResponse;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@AllArgsConstructor
 @RequestMapping("/api/user-roles")
 @CrossOrigin
 public class UserRoleController {
 
-    @Autowired
+
     private UserRoleService userRoleService;
 
     @GetMapping

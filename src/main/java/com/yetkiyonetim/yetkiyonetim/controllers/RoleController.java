@@ -1,28 +1,24 @@
 package com.yetkiyonetim.yetkiyonetim.controllers;
 
-import com.yetkiyonetim.yetkiyonetim.services.dtos.requests.permission.CreatePermissionRequest;
-import com.yetkiyonetim.yetkiyonetim.services.dtos.requests.permission.UpdatePermissionRequest;
+import com.yetkiyonetim.yetkiyonetim.services.abstracts.RoleService;
 import com.yetkiyonetim.yetkiyonetim.services.dtos.requests.role.CreateRoleRequest;
 import com.yetkiyonetim.yetkiyonetim.services.dtos.requests.role.UpdateRoleRequest;
-import com.yetkiyonetim.yetkiyonetim.services.dtos.responses.permission.GetPermissionResponse;
 import com.yetkiyonetim.yetkiyonetim.services.dtos.responses.role.GetRoleListResponse;
 import com.yetkiyonetim.yetkiyonetim.services.dtos.responses.role.GetRoleResponse;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.yetkiyonetim.yetkiyonetim.entities.concretes.Role;
-import com.yetkiyonetim.yetkiyonetim.services.abstracts.RoleService;
 
 import java.util.List;
 
 @RestController
+@AllArgsConstructor
 @RequestMapping("/api/roles")
 @CrossOrigin
 public class RoleController {
 
-    @Autowired
     private RoleService roleService;
 
     @GetMapping

@@ -1,4 +1,4 @@
-package com.yetkiyonetim.yetkiyonetim.core.utilities.mappers;
+package com.yetkiyonetim.yetkiyonetim.core.utilities.mappers.modelMapper;
 
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public class ModelMapperManager implements ModelMapperService{
+public class ModelMapperManager implements ModelMapperService {
     private ModelMapper modelMapper;
 
     @Override

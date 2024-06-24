@@ -4,14 +4,16 @@ package com.yetkiyonetim.yetkiyonetim.entities.concretes;
 import com.yetkiyonetim.yetkiyonetim.entities.compositeKey.UserPermissionId;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
 @Data
 @Entity
 @Table(name = "user_permissions")
+@NoArgsConstructor
 @IdClass(UserPermissionId.class)
-public class UserPermission {
+public class UserPermission implements Serializable{
 
     @Id
     @ManyToOne

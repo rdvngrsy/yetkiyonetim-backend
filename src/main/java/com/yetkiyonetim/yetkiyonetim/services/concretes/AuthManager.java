@@ -37,15 +37,17 @@ public class AuthManager implements AuthService {
 
     @Override
     public GetAuthenticationResponse authenticate(CreateAuthenticationRequest request) {
-        User userEntity = userService.getByUsername(request.getUsername());
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getUsername(),
                         request.getPassword()
                 )
         );
-        var jwtToken = jwtService.generateToken(userEntity);
+        var user = userRepository.findByUsername(request.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        var jwtToken = jwtService.generateToken(user);
         return GetAuthenticationResponse.builder().token(jwtToken).build();
+
     }
 
 

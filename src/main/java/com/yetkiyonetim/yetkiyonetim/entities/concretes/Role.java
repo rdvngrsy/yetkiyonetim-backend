@@ -2,19 +2,19 @@ package com.yetkiyonetim.yetkiyonetim.entities.concretes;
 
 
 import com.yetkiyonetim.yetkiyonetim.entities.abstracts.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "roles")
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class Role extends BaseEntity {
 
     @Column(unique = true, nullable = false)
@@ -24,14 +24,10 @@ public class Role extends BaseEntity {
     private String description;
 
     @OneToMany(mappedBy = "role")
-    private Set<UserRole> userRoles;
+    private Set<UserRole> userRoles = new HashSet<>();
 
     @OneToMany(mappedBy = "role")
     private Set<RolePermission> rolePermissions;
 
-//    @Override
-//    public String getAuthority() {
-//        return name;
-//    }
 }
 

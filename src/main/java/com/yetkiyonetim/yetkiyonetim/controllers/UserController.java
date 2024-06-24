@@ -7,17 +7,18 @@ import com.yetkiyonetim.yetkiyonetim.services.dtos.requests.user.UpdateUserReque
 import com.yetkiyonetim.yetkiyonetim.services.dtos.responses.user.GetUserListResponse;
 import com.yetkiyonetim.yetkiyonetim.services.dtos.responses.user.GetUserResponse;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@AllArgsConstructor
 @RequestMapping("/api/users")
 @CrossOrigin
 public class UserController {
 
-    @Autowired
     private UserService permissionService;
 
     @GetMapping

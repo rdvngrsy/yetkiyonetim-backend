@@ -29,16 +29,18 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "password",nullable = false)
     private String password;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Set<UserRole> userRoles;
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<UserRole> userRoles = new HashSet<>();
 
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<GrantedAuthority> authorities = new HashSet<>();
-        userRoles.forEach(userRole -> {
-            authorities.add(new SimpleGrantedAuthority(userRole.getRole().getName()));
-        });
+        if (userRoles != null) {
+            userRoles.forEach(userRole -> {
+                authorities.add(new SimpleGrantedAuthority(userRole.getRole().getName()));
+            });
+        }
         return authorities;
     }
 

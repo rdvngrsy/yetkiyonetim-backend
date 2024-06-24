@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class GetRoleListResponse {
     private Long id;
-    private String roleName;
+    private String name;
     private String description;
 
 }
